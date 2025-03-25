@@ -1,7 +1,6 @@
 process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
 
 const express = require("express");
-const chromium = require("@sparticuz/chromium");
 const puppeteer = require("puppeteer-core");
 
 console.log(chromium);
@@ -40,8 +39,8 @@ app.post("/login", async (req, res) => {
 
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: await chromium.executablePath,
-    args: chromium.args,
+    executablePath: "/usr/bin/google-chrome",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
     defaultViewport: chromium.defaultViewport,
   });
 
