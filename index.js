@@ -60,7 +60,7 @@ app.post("/login", async (req, res) => {
 
     console.log("Submitting form...");
 
-    await page.waitForTimeout(5000);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const loginError = await page.locator(".errors").count();
     if (loginError > 0) {
