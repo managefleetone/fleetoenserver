@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npx playwright install --with-deps chromium",
+    "postinstall": "npx playwright install chromium --with-deps",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx playwright install chromium",
     "start": "nodemon index.js"
