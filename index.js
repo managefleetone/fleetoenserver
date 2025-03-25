@@ -2,7 +2,6 @@ const express = require("express");
 const { chromium } = require("playwright");
 const cors = require("cors");
 const fetch = require("node-fetch");
-require("dotenv").config();
 
 const app = express();
 const port = 8080;
