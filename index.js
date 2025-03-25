@@ -1,7 +1,7 @@
 process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
 
 const express = require("express");
-// const { chromium } = require("playwright");
+const puppeteer = require("puppeteer-core");
 const chromium = require("@sparticuz/chromium");
 
 console.log(chromium);
@@ -38,7 +38,8 @@ app.post("/login", async (req, res) => {
     return res.status(400).json({ error: "Missing username or password" });
   }
 
-  const browser = await chromium.launch({
+  const browser = await puppeteer.launch({
+    executablePath: await chromium.executablePath,
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
