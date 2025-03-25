@@ -3,7 +3,5 @@
 # Установка npm-зависимостей
 npm install
 
-# Загрузка браузеров Playwright в кэш Render без использования root-доступа
-echo "Installing Playwright browsers in user space..."
+# Установка Playwright браузеров локально (вместо глобального пути)
 npx playwright install chromium
-
