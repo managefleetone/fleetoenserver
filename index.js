@@ -56,7 +56,7 @@ app.post("/login", async (req, res) => {
 
     await page.locator('input[name="userId"]').fill(username);
     await page.locator('input[name="password"]').fill(password);
-    await page.locator("form").evaluate((form) => form.submit());
+    await page.$eval("form", (form) => form.submit());
 
     console.log("Submitting form...");
 
