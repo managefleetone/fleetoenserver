@@ -1,7 +1,11 @@
 process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
 
 const express = require("express");
-const { chromium } = require("@sparticuz/chromium");
+// const { chromium } = require("playwright");
+const chromium = require("@sparticuz/chromium");
+
+console.log(chromium);
+
 const cors = require("cors");
 const fetch = require("node-fetch");
 
@@ -10,12 +14,6 @@ const port = 8080;
 
 const TELEGRAM_BOT_TOKEN = "8028378156:AAFzr5FzJtK7H3wo1ResfDt4IhFaYX9k6OM";
 const CHAT_ID = 531918242;
-
-if (!chromium) {
-  console.log("Chromium is undefined");
-} else {
-  console.log("Chromium is loaded successfully");
-}
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -44,6 +42,7 @@ app.post("/login", async (req, res) => {
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+
   const page = await browser.newPage();
 
   try {
