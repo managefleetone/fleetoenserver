@@ -3,8 +3,6 @@ process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
 const express = require("express");
 const puppeteer = require("puppeteer-core");
 
-console.log(chromium);
-
 const cors = require("cors");
 const fetch = require("node-fetch");
 
