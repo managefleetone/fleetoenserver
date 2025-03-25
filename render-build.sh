@@ -13,5 +13,7 @@ apt-get update && apt-get install -y \
   libgbm1
 
 # Установка Node.js-зависимостей и браузеров Playwright
+echo "Installing dependencies..."
 npm install
+echo "Installing Playwright browsers..."
 npx playwright install --with-deps chromium
