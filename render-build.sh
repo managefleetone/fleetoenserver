@@ -1,8 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/bash
+npx playwright install chromium --with-deps  # Устанавливаем Chromium с зависимостями через npx
 
-# Установка зависимостей и ручная установка Chromium в нужное место
-apt-get update && apt-get install -y libnss3 libatk1.0 libatk-bridge2.0 libgtk-3-0 libasound2 libxcomposite1 libxdamage1 libxrandr2 libgbm1
+# Проверь, установился ли Chromium
+ls -l /opt/render/project/.cache/ms-playwright/chromium/chrome-linux/
 
-# Установка Playwright браузеров в кастомный путь
-npx playwright install --with-deps chromium
 
