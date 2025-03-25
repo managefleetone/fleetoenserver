@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# Установка Chromium с помощью apt
-sudo apt-get update
-sudo apt-get install chromium -y
+# Установка пути для хранения браузеров
+export PLAYWRIGHT_BROWSERS_PATH=/opt/render/project/.cache/ms-playwright
+
+# Установка браузеров Playwright с зависимостями
+npx playwright install chromium --with-deps
 
 # Проверка на наличие браузера
-which chromium
+ls -l /opt/render/project/.cache/ms-playwright/chromium/chrome-linux/
