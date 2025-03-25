@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Установка браузеров Playwright с зависимостями
+# Устанавливаем браузер с зависимостями, используя Playwright
 npx playwright install chromium --with-deps
 
 # Проверка на наличие установленного браузера
