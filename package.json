@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npx playwright install chromium",
     "build": "npx playwright install chromium",
     "start": "nodemon index.js"
   },
