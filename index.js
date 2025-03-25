@@ -9,7 +9,17 @@ const port = 8080;
 const TELEGRAM_BOT_TOKEN = "8028378156:AAFzr5FzJtK7H3wo1ResfDt4IhFaYX9k6OM";
 const CHAT_ID = 531918242;
 
-app.use(cors());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
+app.options("*", (req, res) => {
+  res.sendStatus(200);
+});
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -17,9 +27,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  res.setHeader("Access-Control-Allow-Methods", "POST");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: "Missing username or password" });
