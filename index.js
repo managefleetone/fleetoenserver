@@ -1,7 +1,7 @@
 process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
 
 const express = require("express");
-const { chromium } = require("playwright");
+const { chromium } = require("@sparticuz/chromium");
 const cors = require("cors");
 const fetch = require("node-fetch");
 
@@ -37,7 +37,6 @@ app.post("/login", async (req, res) => {
   const browser = await chromium.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath: require("playwright").chromium.executablePath(),
   });
   const page = await browser.newPage();
 

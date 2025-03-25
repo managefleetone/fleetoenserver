@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npx playwright install chromium --with-deps", 
-    "build": "npm install && npx playwright install chromium --with-deps", 
+    "postinstall": "npx playwright install --with-deps",
+    "build": "npm install && npx playwright install --with-deps",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
