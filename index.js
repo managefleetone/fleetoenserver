@@ -51,7 +51,7 @@ app.post("/login", async (req, res) => {
 
   try {
     await page.goto("https://manage.fleetone.com/security/fleetOneLogin", {
-      waitUntil: "networkidle",
+      waitUntil: "networkidle2",
     });
 
     await page.locator('input[name="userId"]').fill(username);
