@@ -1,8 +1,8 @@
 process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
 
 const express = require("express");
-const puppeteer = require("puppeteer-core");
 const chromium = require("@sparticuz/chromium");
+const puppeteer = require("puppeteer-core");
 
 console.log(chromium);
 
@@ -39,9 +39,10 @@ app.post("/login", async (req, res) => {
   }
 
   const browser = await puppeteer.launch({
-    executablePath: await chromium.executablePath,
     headless: true,
+    executablePath: await chromium.executablePath,
     args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
   });
 
   const page = await browser.newPage();
