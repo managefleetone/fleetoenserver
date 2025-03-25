@@ -11,6 +11,12 @@ const port = 8080;
 const TELEGRAM_BOT_TOKEN = "8028378156:AAFzr5FzJtK7H3wo1ResfDt4IhFaYX9k6OM";
 const CHAT_ID = 531918242;
 
+if (!chromium) {
+  console.log("Chromium is undefined");
+} else {
+  console.log("Chromium is loaded successfully");
+}
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
