@@ -37,6 +37,7 @@ app.post("/login", async (req, res) => {
   const browser = await chromium.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    executablePath: require("playwright").chromium.executablePath(),
   });
   const page = await browser.newPage();
 
