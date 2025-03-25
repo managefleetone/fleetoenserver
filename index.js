@@ -96,7 +96,3 @@ app.listen(port, () => {
 });
 
 module.exports = app;
-  console.log(`Backend server is running at http://localhost:${port}`);
-});
-
-module.exports = app;
