@@ -32,7 +32,7 @@ app.post("/login", async (req, res) => {
     return res.status(400).json({ error: "Missing username or password" });
   }
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], });
   const page = await browser.newPage();
 
   try {
