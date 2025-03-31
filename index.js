@@ -40,7 +40,7 @@ app.post("/login", async (req, res) => {
   }
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     executablePath: await executablePath(),
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
     // args: chromium.args,
