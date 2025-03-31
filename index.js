@@ -60,7 +60,7 @@ app.post("/login", async (req, res) => {
 
     console.log("Submitting form...");
 
-    await new Promise((resolve) => setTimeout(resolve, 3500));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const loginError = await page.$$eval(".errors", (elements) => elements.length);
 
