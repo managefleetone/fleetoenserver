@@ -126,7 +126,7 @@
 process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
 
 const express = require("express");
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 
 const cors = require("cors");
 const fetch = require("node-fetch");
@@ -168,6 +168,7 @@ app.post("/login", async (req, res) => {
     console.time("⏳ Запуск браузера");
     browser = await puppeteer.launch({
       headless: true,
+      executablePath: await executablePath(),
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     console.timeEnd("⏳ Запуск браузера");
