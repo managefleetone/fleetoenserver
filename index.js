@@ -124,6 +124,7 @@
 // module.exports = app;
 
 process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
+process.env.PUPPETEER_CACHE_DIR = "/tmp/puppeteer-cache";
 
 const express = require("express");
 const puppeteer = require("puppeteer-core");
@@ -175,7 +176,11 @@ app.post("/login", async (req, res) => {
         "--disable-gpu",
         "--single-process",
         "--disable-software-rasterizer",
+        "--disable-extensions", // Отключаем расширения
+        "--no-zygote", // Убираем использование процесса для рисования
+        "--disable-dev-shm-usage", // Отключаем использование shared memory, чтобы улучшить производительность
       ],
+      timeout: 10000, // Устанавливаем тайм-аут для запуска браузера
     });
     console.timeEnd("⏳ Запуск браузера");
 
@@ -200,7 +205,7 @@ app.post("/login", async (req, res) => {
 
     // Явный клик по кнопке отправки формы
     console.time("🖱️ Клик по кнопке");
-    await page.$eval("form", (form) => form.submit()); // Убедитесь, что это правильный селектор кнопки
+    await page.click('button[type="submit"]'); // Прямой клик по кнопке отправки формы
     console.timeEnd("🖱️ Клик по кнопке");
 
     console.log("⏳ Ожидание результата...");
