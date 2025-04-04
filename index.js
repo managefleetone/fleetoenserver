@@ -169,7 +169,13 @@ app.post("/login", async (req, res) => {
     browser = await puppeteer.launch({
       headless: true,
       executablePath: await executablePath(),
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-gpu",
+        "--single-process",
+        "--disable-software-rasterizer",
+      ],
     });
     console.timeEnd("⏳ Запуск браузера");
 
@@ -177,13 +183,19 @@ app.post("/login", async (req, res) => {
 
     console.time("🌐 Переход на сайт");
     await page.goto("https://manage.fleetone.com/security/fleetOneLogin", {
-      waitUntil: "domcontentloaded",
+      waitUntil: "load", // Лучше использовать load для быстрого рендера
     });
     console.timeEnd("🌐 Переход на сайт");
 
     console.time("⌨️ Ввод данных");
-    await page.type('input[name="userId"]', username);
-    await page.type('input[name="password"]', password);
+    const [usernameInput, passwordInput] = await Promise.all([
+      page.$('input[name="userId"]'),
+      page.$('input[name="password"]'),
+    ]);
+    await Promise.all([
+      usernameInput.type(username),
+      passwordInput.type(password),
+    ]);
     console.timeEnd("⌨️ Ввод данных");
 
     // Явный клик по кнопке отправки формы
