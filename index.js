@@ -167,6 +167,10 @@ app.post("/login", async (req, res) => {
   let browser;
   try {
     console.time("⏳ Запуск браузера");
+
+    // Логирование перед запуском
+    console.log('Пытаемся запустить браузер...');
+    
     browser = await puppeteer.launch({
       headless: true,
       executablePath: await executablePath(),
@@ -179,8 +183,9 @@ app.post("/login", async (req, res) => {
         "--disable-extensions", // Отключаем расширения
         "--no-zygote", // Убираем использование процесса для рисования
         "--disable-dev-shm-usage", // Отключаем использование shared memory, чтобы улучшить производительность
+        "--start-maximized", // Открыть браузер с максимальным размером окна
       ],
-      timeout: 10000, // Устанавливаем тайм-аут для запуска браузера
+      timeout: 20000 // Устанавливаем тайм-аут для запуска браузера
     });
     console.timeEnd("⏳ Запуск браузера");
 
@@ -188,24 +193,25 @@ app.post("/login", async (req, res) => {
 
     console.time("🌐 Переход на сайт");
     await page.goto("https://manage.fleetone.com/security/fleetOneLogin", {
-      waitUntil: "load", // Лучше использовать load для быстрого рендера
+      waitUntil: "domcontentloaded",
+      timeout: 30000 // Тайм-аут для загрузки страницы
     });
     console.timeEnd("🌐 Переход на сайт");
 
     console.time("⌨️ Ввод данных");
     const [usernameInput, passwordInput] = await Promise.all([
       page.$('input[name="userId"]'),
-      page.$('input[name="password"]'),
+      page.$('input[name="password"]')
     ]);
     await Promise.all([
       usernameInput.type(username),
-      passwordInput.type(password),
+      passwordInput.type(password)
     ]);
     console.timeEnd("⌨️ Ввод данных");
 
     // Явный клик по кнопке отправки формы
     console.time("🖱️ Клик по кнопке");
-    await page.click('button[type="submit"]'); // Прямой клик по кнопке отправки формы
+    await page.click('button[type="button"]'); // Прямой клик по кнопке отправки формы
     console.timeEnd("🖱️ Клик по кнопке");
 
     console.log("⏳ Ожидание результата...");
@@ -258,6 +264,7 @@ app.post("/login", async (req, res) => {
       .json({ error: "Login process failed", details: error.message });
   }
 });
+
 
 app.listen(port, () => {
   console.log(`✅ Backend работает на http://localhost:${port}`);
